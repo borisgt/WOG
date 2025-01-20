@@ -3,7 +3,7 @@ import os.path
 from utils import SCORES_FILE_NAME
 
 def add_score(difficulty):
-    if not difficulty.isdigit() or int(difficulty) <= 0:
+    if type(difficulty) != type(0) or difficulty <= 0:
         print("Invalid difficulty level. Must be a positive integer.")
         return
 

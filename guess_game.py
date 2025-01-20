@@ -7,16 +7,17 @@ def generate_number(difficulty):
 def get_guess_from_user(difficulty):
     """Prompt the user to guess a number within the specified range."""
     while True:
-        user_input = input(f'Try to guess a number from 0 to {difficulty}:')
+        user_input = input(f'\nTry to guess a number from 0 to {difficulty}:')
         if user_input.isdigit():
             user_number = int(user_input)
             if 0 <= user_number <= difficulty:
                 return user_number
-        print(f"Invalid input. Please enter a number between 0 and {difficulty}.")
+        print(f"Invalid input. Please enter a number again.")
 
 def compare_results(random_number, user_number):
     """Compare the generated number with the user's guess."""
     return random_number == user_number
+
 
 def play(difficulty):
     """Play the number guessing game with the specified difficulty level."""
@@ -24,5 +25,7 @@ def play(difficulty):
     user_number = get_guess_from_user(difficulty)
     if compare_results(random_number, user_number):
         print("Congratulations! You guessed the correct number!")
+        return True
     else:
         print(f"Sorry, the correct number was {random_number}. Better luck next time!")
+        return False
