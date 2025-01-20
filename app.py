@@ -5,7 +5,7 @@ from score import add_score
 
 def welcome():
     """Greets the user and asks for their name."""
-    user_name = input('What is your name:\n')
+    user_name = input('What is your name: ').strip()
     print(f'Hi {user_name} and welcome to the World of Games: The Epic Journey\n')
 
 def start_play():
@@ -27,7 +27,7 @@ def start_play():
             print(f'{num}. {game}')
 
         # Get user input for game selection
-        game_input = input('Please choose a game by number (or type "exit" to quit):\n').strip().lower()
+        game_input = input('Please choose a game by number (or type "exit" to quit): ').strip().lower()
 
         # Handle exit command
         if game_input == "exit":
@@ -40,7 +40,7 @@ def start_play():
 
             # Ensure valid difficulty level selection
             while True:
-                level_input = input('Please select a difficulty level (1-5):\n').strip()
+                level_input = input('Please select a difficulty level (1-5): ').strip()
                 if level_input.isdigit() and 1 <= int(level_input) <= 5:
                     level = int(level_input)
                     break   # Exit if valid level is selected
@@ -57,7 +57,7 @@ def start_play():
                 add_score(level)
 
             # Ask if the user wants to play another game
-            play_again = input("\nDo you want to play another game? (y/n):").strip().lower()
+            play_again = input("\nDo you want to play another game? (y/n): ").strip().lower()
             if play_again != 'y':
                 print("Thank you for playing! Goodbye!")
                 break
