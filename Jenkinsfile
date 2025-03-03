@@ -9,12 +9,6 @@ pipeline {
     }
 
     stages {
-        stage('Checkout') {
-            steps {
-                git url: 'https://github.com/borisgt/WOG.git', credentialsId: 'GITHUB_TOKEN'
-            }
-        }
-
         stage('Build') {
             steps {
                 script {
