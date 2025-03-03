@@ -24,13 +24,13 @@ services:
       - ./tests/e2e.py:/wog/tests/e2e.py
 
   push_to_dockerhub:
-    image: docker
+    image: flask_wog:latest
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
     entrypoint: >
       sh -c "
       docker login -u ${DOCKER_USERNAME} -p ${DOCKER_PASSWORD} &&
-      docker tag flask_wog ${DOCKER_USERNAME}/flask_wog:latest &&
+      docker tag flask_wog:latest ${DOCKER_USERNAME}/flask_wog:latest &&
       docker push ${DOCKER_USERNAME}/flask_wog:latest
       "
     environment:
