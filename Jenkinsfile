@@ -6,12 +6,14 @@ pipeline {
         DOCKER_USERNAME = credentials('docker-username')
         DOCKER_PASSWORD = credentials('docker-password')
         GITHUB_TOKEN = credentials('github-token')
+        PATH = "/usr/local/bin:$PATH"
     }
 
     stages {
         stage('Build') {
             steps {
                 script {
+                    sh 'echo $PATH'
                     sh 'docker compose build'
                 }
             }
