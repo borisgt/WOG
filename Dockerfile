@@ -6,6 +6,7 @@ RUN apk update && apk add --no-cache \
     firefox \
     wget \
     unzip \
+    curl \
     && rm -rf /var/cache/apk/*
 
 # Install GeckoDriver
