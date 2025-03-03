@@ -45,10 +45,12 @@ pipeline {
         stage('Push to Docker Hub') {
             steps {
                 script {
+                    echo "DOCKER_USERNAME is: ${DOCKER_USERNAME}"
+                    echo "DOCKER_PASSWORD is: ${DOCKER_PASSWORD}"
                     sh """
-                    echo \$DOCKER_PASSWORD | docker login -u \$DOCKER_USERNAME --password-stdin
-                    docker tag ${IMAGE_NAME}:${IMAGE_TAG} \$DOCKER_USERNAME/${IMAGE_NAME}:${IMAGE_TAG}
-                    docker push \$DOCKER_USERNAME/${IMAGE_NAME}:${IMAGE_TAG}
+                    echo \$DOCKER_PASSWORD | docker login -u ${DOCKER_USERNAME} --password-stdin
+                    docker tag ${IMAGE_NAME}:${IMAGE_TAG} ${DOCKER_USERNAME}/${IMAGE_NAME}:${IMAGE_TAG}
+                    docker push ${DOCKER_USERNAME}/${IMAGE_NAME}:${IMAGE_TAG}
                     """
                 }
             }
