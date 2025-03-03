@@ -7,6 +7,8 @@ pipeline {
         DOCKER_PASSWORD = credentials('docker-password')
         GITHUB_TOKEN = credentials('github-token')
         PATH = "/usr/local/bin:$PATH"
+        IMAGE_NAME = 'flask_wog'
+        IMAGE_TAG = 'latest'
     }
 
     stages {
@@ -38,11 +40,26 @@ pipeline {
             }
         }
 
+        stage('Push to Docker Hub') {
+            steps {
+                script {
+                    sh """
+                    docker login -u ${DOCKER_USERNAME} -p ${DOCKER_PASSWORD}
+                    docker tag ${IMAGE_NAME}:${IMAGE_TAG} ${DOCKER_USERNAME}/${IMAGE_NAME}:${IMAGE_TAG}
+                    docker push ${DOCKER_USERNAME}/${IMAGE_NAME}:${IMAGE_TAG}
+                    """
+                }
+            }
+        }
+
         stage('Finalize') {
             steps {
                 script {
                     sh 'docker compose down'
-                    sh 'docker compose run push_to_dockerhub'
+                    sh """
+                    docker image rm ${IMAGE_NAME}:${IMAGE_TAG} -f
+                    docker image rm ${DOCKER_USERNAME}/${IMAGE_NAME}:${IMAGE_TAG} -f
+                    """
                 }
             }
         }
