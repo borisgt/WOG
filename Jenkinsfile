@@ -5,7 +5,7 @@ pipeline {
         REGISTRY = "borisgt/wog"
         REGISTRY_CREDENTIAL = 'dockerhub_id'
         FLASK_PORT = '8777'
-        DOCKER_IMAGE = ''
+        DOCKER_IMAGE = "${REGISTRY}:${BUILD_NUMBER}"
         PATH = "/usr/local/bin:$PATH"
     }
 
@@ -13,7 +13,6 @@ pipeline {
         stage('Build') {
             steps {
                 script {
-                    DOCKER_IMAGE = REGISTRY + ":$BUILD_NUMBER"
                     echo "DOCKER_IMAGE is: ${DOCKER_IMAGE}"
                     sh 'docker compose build'
                 }
