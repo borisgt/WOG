@@ -33,8 +33,10 @@ pipeline {
             steps {
                 script {
                     def testResult = sh(script: "docker compose run test", returnStatus: true)
-                    if (testResult != 0) {
-                        error("Tests failed")
+                    if (testResult == 0) {
+                        echo "Tests succeeded!"
+                    } else {
+                        error("Tests failed.")
                     }
                 }
             }
