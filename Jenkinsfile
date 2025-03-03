@@ -58,10 +58,6 @@ pipeline {
             steps {
                 script {
                     sh 'docker compose down'
-                    sh """
-                    docker image rm ${IMAGE_NAME}:${IMAGE_TAG} -f
-                    docker image rm ${DOCKER_USERNAME}/${IMAGE_NAME}:${IMAGE_TAG} -f
-                    """
                 }
             }
         }
@@ -69,7 +65,11 @@ pipeline {
 
     post {
         always {
-            cleanWs()
+            script {
+                sh 'docker system prune -f'
+                sh 'docker rmi ${IMAGE_NAME}:${IMAGE_TAG}'
+                cleanWs()
+            }
         }
     }
 }
