@@ -44,9 +44,6 @@ pipeline {
             steps {
                 withCredentials([usernamePassword(credentialsId: 'docker-credentials', usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]) {
                     script {
-                        echo "DOCKER_USERNAME is: ${DOCKER_USERNAME}"
-                        echo "DOCKER_PASSWORD is: ${DOCKER_PASSWORD}"
-
                         sh """
                         echo \$DOCKER_PASSWORD | docker login -u \$DOCKER_USERNAME --password-stdin
                         docker tag ${IMAGE_NAME}:${IMAGE_TAG} \$DOCKER_USERNAME/${IMAGE_NAME}:${IMAGE_TAG}
@@ -69,6 +66,14 @@ pipeline {
     post {
         always {
             script {
+                sh """
+                if [ \$(docker ps -aq -f name=wog_flask_container) ]; then
+                    docker rm -f wog_flask_container
+                fi
+                if [ \$(docker ps -aq -f name=wog_test_container) ]; then
+                    docker rm -f wog_test_container
+                fi
+                """
                 sh 'docker system prune -f'
                 sh 'docker rmi ${IMAGE_NAME}:${IMAGE_TAG}'
                 cleanWs()
