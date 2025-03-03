@@ -11,7 +11,7 @@ pipeline {
     stages {
         stage('Checkout') {
             steps {
-                git url: 'https://github.com/borisgt/WOG.git', credentialsId: 'github-token'
+                git url: 'https://github.com/borisgt/WOG.git', credentialsId: 'GITHUB_TOKEN'
             }
         }
 
@@ -34,7 +34,7 @@ pipeline {
         stage('Test') {
             steps {
                 script {
-                    def testResult = sh(script: "python3 e2e.py", returnStatus: true)
+                    def testResult = sh(script: "docker-compose run test", returnStatus: true)
                     if (testResult != 0) {
                         error("Tests failed")
                     }

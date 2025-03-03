@@ -12,7 +12,7 @@ def test_scores_service(app_url):
     driver = webdriver.Chrome()
     driver.get(app_url)
 
-    score_element = driver.find_element(By.ID, 'score_element_id')
+    score_element = driver.find_element(By.ID, 'score')
     score_text = score_element.text
 
     score = int(score_text)
@@ -26,7 +26,7 @@ def main_function():
     Main function to call the test_scores_service function.
     Returns -1 if the test fails, 0 if it passes.
     """
-    app_url = "http://localhost"
+    app_url = "http://localhost:8777"
 
     if test_scores_service(app_url):
         print("Test passed!")
