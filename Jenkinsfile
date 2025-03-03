@@ -47,7 +47,6 @@ pipeline {
                         echo "DOCKER_USERNAME is: ${DOCKER_USERNAME}"
                         echo "DOCKER_PASSWORD is: ${DOCKER_PASSWORD}"
 
-                        // Use the Docker password to log in
                         sh """
                         echo \$DOCKER_PASSWORD | docker login -u \$DOCKER_USERNAME --password-stdin
                         docker tag ${IMAGE_NAME}:${IMAGE_TAG} \$DOCKER_USERNAME/${IMAGE_NAME}:${IMAGE_TAG}
