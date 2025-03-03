@@ -22,7 +22,7 @@ pipeline {
         stage('Run') {
             steps {
                 script {
-                    sh 'docker compose up -d ${DOCKER_IMAGE}'
+                    sh 'docker compose up -d flask_wog'
                 }
             }
         }
