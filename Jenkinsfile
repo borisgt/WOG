@@ -5,12 +5,13 @@ pipeline {
         FLASK_PORT = '8777'
         DOCKER_USERNAME = credentials('docker-username')
         DOCKER_PASSWORD = credentials('docker-password')
+        GITHUB_TOKEN = credentials('github-token')
     }
 
     stages {
         stage('Checkout') {
             steps {
-                checkout scm
+                git url: 'https://github.com/borisgt/WOG.git', credentialsId: 'github-token'
             }
         }
 
