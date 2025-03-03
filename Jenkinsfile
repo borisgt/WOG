@@ -55,6 +55,7 @@ pipeline {
         stage('Finalize') {
             steps {
                 script {
+                    sh 'docker ps'
                 /*
                     sh 'docker compose down'
                     */
