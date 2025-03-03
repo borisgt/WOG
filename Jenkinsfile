@@ -55,7 +55,9 @@ pipeline {
         stage('Finalize') {
             steps {
                 script {
+                /*
                     sh 'docker compose down'
+                    */
                 }
             }
         }
@@ -64,6 +66,7 @@ pipeline {
     post {
         always {
             script {
+            /*
                 sh """
                 if [ \$(docker ps -aq -f name=${CONTAINER_FLASK}) ]; then
                     docker rm -f ${CONTAINER_FLASK}
@@ -71,6 +74,7 @@ pipeline {
                 """
                 sh 'docker system prune -f'
                 sh 'docker rmi ${DOCKER_IMAGE}'
+                */
                 cleanWs()
             }
         }
