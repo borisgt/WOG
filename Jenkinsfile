@@ -14,6 +14,7 @@ pipeline {
             steps {
                 script {
                     DOCKER_IMAGE = REGISTRY + ":$BUILD_NUMBER"
+                    echo "DOCKER_IMAGE is: ${DOCKER_IMAGE}"
                     sh 'docker compose build'
                 }
             }
