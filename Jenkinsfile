@@ -10,7 +10,6 @@ pipeline {
         PATH = "/usr/local/bin:$PATH"
         DOCKER_CERT_PATH = credentials('dockerhub_id')
         CONTAINER_FLASK = "wog_flask_container"
-        CONTAINER_TEST = "wog_test_container"
     }
 
     stages {
@@ -33,7 +32,7 @@ pipeline {
         stage('Test') {
             steps {
                 script {
-                    def testResult = sh(script: "docker compose run test", returnStatus: true)
+                    def testResult = sh(script: "docker exec ${CONTAINER_FLASK} sh -c 'sleep 10 && python3 /wog/tests/e2e.py'", returnStatus: true)
                     if (testResult == 0) {
                         echo "Tests succeeded!"
                     } else {
@@ -68,9 +67,6 @@ pipeline {
                 sh """
                 if [ \$(docker ps -aq -f name=${CONTAINER_FLASK}) ]; then
                     docker rm -f ${CONTAINER_FLASK}
-                fi
-                if [ \$(docker ps -aq -f name=${CONTAINER_TEST}) ]; then
-                    docker rm -f ${CONTAINER_TEST}
                 fi
                 """
                 sh 'docker system prune -f'

@@ -13,14 +13,5 @@ services:
       - FLASK_PORT=${FLASK_PORT}
     volumes:
       - ./Scores.txt:/wog/Scores.txt
-    command: ["sh", "-c", "flask --app main_score.py run --host=0.0.0.0 --port=${FLASK_PORT}"]
-
-  test:
-    image: ${DOCKER_IMAGE}
-    container_name: wog_test_container
-    command: ["sh", "-c", "sleep 10 && python3 /wog/tests/e2e.py"]
-    depends_on:
-      - flask_wog
-    network_mode: service:flask_wog
-    volumes:
       - ./tests/e2e.py:/wog/tests/e2e.py
+    command: ["sh", "-c", "flask --app main_score.py run --host=0.0.0.0 --port=${FLASK_PORT}"]
