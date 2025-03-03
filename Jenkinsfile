@@ -5,7 +5,6 @@ pipeline {
         FLASK_PORT = '8777'
         DOCKER_USERNAME = credentials('docker-username')
         DOCKER_PASSWORD = credentials('docker-password')
-        GITHUB_TOKEN = credentials('github-token')
         PATH = "/usr/local/bin:$PATH"
         IMAGE_NAME = 'flask_wog'
         IMAGE_TAG = 'latest'
@@ -15,7 +14,6 @@ pipeline {
         stage('Build') {
             steps {
                 script {
-                    sh 'echo $PATH'
                     sh 'docker compose build'
                 }
             }
@@ -44,14 +42,18 @@ pipeline {
 
         stage('Push to Docker Hub') {
             steps {
-                script {
-                    echo "DOCKER_USERNAME is: ${DOCKER_USERNAME}"
-                    echo "DOCKER_PASSWORD is: ${DOCKER_PASSWORD}"
-                    sh """
-                    echo \$DOCKER_PASSWORD | docker login -u ${DOCKER_USERNAME} --password-stdin
-                    docker tag ${IMAGE_NAME}:${IMAGE_TAG} ${DOCKER_USERNAME}/${IMAGE_NAME}:${IMAGE_TAG}
-                    docker push ${DOCKER_USERNAME}/${IMAGE_NAME}:${IMAGE_TAG}
-                    """
+                withCredentials([usernamePassword(credentialsId: 'docker-credentials', usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]) {
+                    script {
+                        echo "DOCKER_USERNAME is: ${DOCKER_USERNAME}"
+                        echo "DOCKER_PASSWORD is: ${DOCKER_PASSWORD}"
+
+                        // Use the Docker password to log in
+                        sh """
+                        echo \$DOCKER_PASSWORD | docker login -u \$DOCKER_USERNAME --password-stdin
+                        docker tag ${IMAGE_NAME}:${IMAGE_TAG} \$DOCKER_USERNAME/${IMAGE_NAME}:${IMAGE_TAG}
+                        docker push \$DOCKER_USERNAME/${IMAGE_NAME}:${IMAGE_TAG}
+                        """
+                    }
                 }
             }
         }
