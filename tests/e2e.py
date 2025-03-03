@@ -21,12 +21,14 @@ def test_scores_service(app_url):
 
     return 1 <= score <= 1000
 
-def main_function():
+def main_function(app_url):
     """
     Main function to call the test_scores_service function.
-    Returns -1 if the test fails, 0 if it passes.
+    :param app_url: URL of the web service
+    :return: -1 if the test fails, 0 if it passes.
     """
-    app_url = "http://localhost:8777"
+    if app_url is None:
+        app_url = "http://localhost:8777"
 
     if test_scores_service(app_url):
         print("Test passed!")
