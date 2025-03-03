@@ -11,7 +11,4 @@ services:
       - "${FLASK_PORT}:${FLASK_PORT}"
     environment:
       - FLASK_PORT=${FLASK_PORT}
-    volumes:
-      - ./Scores.txt:/wog/Scores.txt:ro
-      - ./tests/e2e.py:/wog/tests/e2e.py:ro
     command: ["sh", "-c", "flask --app main_score.py run --host=0.0.0.0 --port=${FLASK_PORT}"]
