@@ -12,7 +12,7 @@ pipeline {
         stage('Build') {
             steps {
                 script {
-                    sh 'docker-compose build'
+                    sh 'docker compose build'
                 }
             }
         }
@@ -20,7 +20,7 @@ pipeline {
         stage('Run') {
             steps {
                 script {
-                    sh 'docker-compose up -d flask_wog'
+                    sh 'docker compose up -d flask_wog'
                 }
             }
         }
@@ -28,7 +28,7 @@ pipeline {
         stage('Test') {
             steps {
                 script {
-                    def testResult = sh(script: "docker-compose run test", returnStatus: true)
+                    def testResult = sh(script: "docker compose run test", returnStatus: true)
                     if (testResult != 0) {
                         error("Tests failed")
                     }
@@ -39,8 +39,8 @@ pipeline {
         stage('Finalize') {
             steps {
                 script {
-                    sh 'docker-compose down'
-                    sh 'docker-compose run push_to_dockerhub'
+                    sh 'docker compose down'
+                    sh 'docker compose run push_to_dockerhub'
                 }
             }
         }
