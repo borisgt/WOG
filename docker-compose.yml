@@ -1,0 +1,28 @@
+version: '3.8'
+
+services:
+  flask_app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "${FLASK_PORT}:${FLASK_PORT}"
+    environment:
+      - FLASK_PORT=${FLASK_PORT}
+    volumes:
+      - ./Scores.txt:/wog/Scores.txt
+    command: ["sh", "-c", "flask --app main_score.py run --host=0.0.0.0 --port=${FLASK_PORT}"]
+
+  push_to_dockerhub:
+    image: docker
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    entrypoint: >
+      sh -c "
+      docker login -u ${DOCKER_USERNAME} -p ${DOCKER_PASSWORD} &&
+      docker tag flask_wog ${DOCKER_USERNAME}/flask_wog:latest &&
+      docker push ${DOCKER_USERNAME}/flask_wog:latest
+      "
+    environment:
+      - DOCKER_USERNAME=${DOCKER_USERNAME}
+      - DOCKER_PASSWORD=${DOCKER_PASSWORD}
