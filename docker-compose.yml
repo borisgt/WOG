@@ -5,7 +5,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    image: flask_wog:latest
+    image: ${DOCKER_IMAGE}
     container_name: wog_flask_container
     ports:
       - "${FLASK_PORT}:${FLASK_PORT}"
@@ -16,7 +16,7 @@ services:
     command: ["sh", "-c", "flask --app main_score.py run --host=0.0.0.0 --port=${FLASK_PORT}"]
 
   test:
-    image: flask_wog:latest
+    image: ${DOCKER_IMAGE}
     container_name: wog_test_container
     command: ["sh", "-c", "sleep 10 && python3 /wog/tests/e2e.py"]
     depends_on:

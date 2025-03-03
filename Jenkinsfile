@@ -2,18 +2,18 @@ pipeline {
     agent any
 
     environment {
+        REGISTRY = "borisgt/wog"
+        REGISTRY_CREDENTIAL = 'dockerhub_id'
         FLASK_PORT = '8777'
-        DOCKER_USERNAME = credentials('docker-username')
-        DOCKER_PASSWORD = credentials('docker-password')
+        DOCKER_IMAGE = ''
         PATH = "/usr/local/bin:$PATH"
-        IMAGE_NAME = 'flask_wog'
-        IMAGE_TAG = 'latest'
     }
 
     stages {
         stage('Build') {
             steps {
                 script {
+                    DOCKER_IMAGE = REGISTRY + ":$BUILD_NUMBER"
                     sh 'docker compose build'
                 }
             }
@@ -22,7 +22,7 @@ pipeline {
         stage('Run') {
             steps {
                 script {
-                    sh 'docker compose up -d flask_wog'
+                    sh 'docker compose up -d ${DOCKER_IMAGE}'
                 }
             }
         }
@@ -40,6 +40,7 @@ pipeline {
             }
         }
 
+        /*
         stage('Push to Docker Hub') {
             steps {
                 withCredentials([usernamePassword(credentialsId: 'docker-credentials', usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]) {
@@ -49,6 +50,17 @@ pipeline {
                         docker tag ${IMAGE_NAME}:${IMAGE_TAG} \$DOCKER_USERNAME/${IMAGE_NAME}:${IMAGE_TAG}
                         docker push \$DOCKER_USERNAME/${IMAGE_NAME}:${IMAGE_TAG}
                         """
+                    }
+                }
+            }
+        }
+        */
+
+        stage('Deploy image to Docker Hub') {
+            steps {
+                script {
+                    docker.withRegistry( '', REGISTRY_CREDENTIAL ) {
+                        DOCKER_IMAGE.push()
                     }
                 }
             }
@@ -75,7 +87,7 @@ pipeline {
                 fi
                 """
                 sh 'docker system prune -f'
-                sh 'docker rmi ${IMAGE_NAME}:${IMAGE_TAG}'
+                sh 'docker rmi ${DOCKER_IMAGE}'
                 cleanWs()
             }
         }
