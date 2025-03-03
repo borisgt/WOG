@@ -1,5 +1,6 @@
 from selenium import webdriver
 from selenium.webdriver.common.by import By
+from selenium.webdriver.firefox.service import Service
 import sys
 
 def test_scores_service(app_url):
@@ -9,7 +10,10 @@ def test_scores_service(app_url):
     :return: True if the score is valid, False otherwise
     """
 
-    driver = webdriver.Firefox()
+    service = Service(executable_path='/usr/local/bin/geckodriver')
+    options = webdriver.FirefoxOptions()
+    options.headless = True
+    driver = webdriver.Firefox(service=service, options=options)
     driver.get(app_url)
 
     score_element = driver.find_element(By.ID, 'score')
