@@ -9,7 +9,7 @@ def test_scores_service(app_url):
     :return: True if the score is valid, False otherwise
     """
 
-    driver = webdriver.Chrome()
+    driver = webdriver.Firefox()
     driver.get(app_url)
 
     score_element = driver.find_element(By.ID, 'score')
