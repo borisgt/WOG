@@ -8,10 +8,10 @@
 - Currency Roulette Game
 
 ### Score Service:
- A Flask app that serves and validates scores.
+- A Flask app that serves and validates scores.
 
 ### Jenkins Pipeline:
- Automates testing and deployment.
+- Automates testing and deployment.
 
 ---
 ## Features
