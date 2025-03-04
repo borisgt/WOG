@@ -2,7 +2,7 @@ from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.common.by import By
 from selenium.webdriver.chrome.options import Options
-from webdriver_manager.chrome import ChromeDriverManager
+
 import sys
 
 def test_scores_service(app_url):
@@ -13,13 +13,16 @@ def test_scores_service(app_url):
     """
 
     chrome_options = Options()
-    chrome_options.add_argument("--headless")
-    chrome_options.add_argument("--disable-gpu")
-    chrome_options.add_argument("--window-size=1920,1080")
+    chrome_options.add_argument("--headless")  # Run in headless mode
+    chrome_options.add_argument("--disable-gpu")  # Disable GPU acceleration
+    chrome_options.add_argument("--no-sandbox")  # Bypass OS security model
+    chrome_options.add_argument("--disable-dev-shm-usage")  # Overcome limited resource problems
 
-    service = Service(ChromeDriverManager().install())
+    # Use the Chromium binary
+    chrome_options.binary_location = "/usr/bin/chromium-browser"
 
-    driver = webdriver.Chrome(service=service, options=chrome_options)
+    # Initialize the Chrome WebDriver with headless options
+    driver = webdriver.Chrome(service=Service("/usr/bin/chromedriver"), options=chrome_options)
 
     driver.get(app_url)
 

@@ -1,5 +1,26 @@
 FROM python:3.13.2-alpine
 
+RUN apk add --no-cache \
+    chromium \
+    chromium-chromedriver \
+    bash \
+    curl \
+    libstdc++ \
+    nss \
+    freetype \
+    harfbuzz \
+    ttf-freefont \
+    dbus \
+    tzdata
+
+# Set environment variables for Chromium
+ENV CHROMIUM_PATH=/usr/bin/chromium-browser
+ENV CHROME_PATH=/usr/bin/chromium-browser
+ENV CHROMEDRIVER_PATH=/usr/bin/chromedriver
+
+# Set the display for headless mode
+ENV DISPLAY=:99
+
 WORKDIR /wog
 
 COPY requirements.txt requirements.txt
