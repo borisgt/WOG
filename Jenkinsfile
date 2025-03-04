@@ -21,7 +21,6 @@ pipeline {
                 script {
                     sh '''
                         echo $((RANDOM % 2001)) > Scores.txt
-                        cat Scores.txt
                     '''
 
                     sh 'chmod a+r Scores.txt'
