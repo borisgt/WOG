@@ -1,6 +1,8 @@
 from selenium import webdriver
+from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.common.by import By
-from selenium.webdriver.firefox.service import Service
+from selenium.webdriver.chrome.options import Options
+from webdriver_manager.chrome import ChromeDriverManager
 import sys
 
 def test_scores_service(app_url):
@@ -10,10 +12,15 @@ def test_scores_service(app_url):
     :return: True if the score is valid, False otherwise
     """
 
-    service = Service(executable_path='/usr/local/bin/geckodriver')
-    options = webdriver.FirefoxOptions()
-    options.headless = True
-    driver = webdriver.Firefox(service=service, options=options)
+    chrome_options = Options()
+    chrome_options.add_argument("--headless")
+    chrome_options.add_argument("--disable-gpu")
+    chrome_options.add_argument("--window-size=1920,1080")
+
+    service = Service(ChromeDriverManager().install())
+
+    driver = webdriver.Chrome(service=service, options=chrome_options)
+
     driver.get(app_url)
 
     score_element = driver.find_element(By.ID, 'score')
