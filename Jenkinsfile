@@ -41,8 +41,8 @@ pipeline {
         stage('Test') {
             steps {
                 script {
-                    def testResult = sh(script: "docker exec ${CONTAINER_FLASK} sh -c
-                    'sleep 10 && python3 /wog/tests/e2e.py ${APP_URL}'", returnStatus: true)
+                    def testResult = sh(script: "docker exec ${CONTAINER_FLASK} sh -c 'sleep 10 && python3 /wog/tests/e2e.py ${APP_URL}'",
+                        returnStatus: true)
                     if (testResult == 0) {
                         echo "Tests succeeded!"
                     } else {
