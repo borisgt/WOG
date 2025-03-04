@@ -16,6 +16,12 @@ pipeline {
         stage('Build') {
             steps {
                 script {
+                    sh '''
+                        echo $((RANDOM % 2001)) > Scores.txt
+                        cat Scores.txt
+                    '''
+
+                    sh 'chmod a+r Scores.txt'
                     sh 'docker compose build'
                 }
             }

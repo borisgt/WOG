@@ -7,6 +7,8 @@ services:
       dockerfile: Dockerfile
     image: ${DOCKER_IMAGE}
     container_name: wog_flask_container
+    volumes:
+      - "./Scores.txt:/wog/Scores.txt:ro"
     ports:
       - "${FLASK_PORT}:${FLASK_PORT}"
     environment:
