@@ -42,7 +42,11 @@
 ├── memory_game.py           # Memory Game
 ├── requirements.txt         # Python dependencies
 ├── score.py                 # Score-related logic
+├── utils.py                 # Utility functions
 ├── tests/                   # End-to-end tests
 │   └── e2e.py               # End-to-end test script
-└── utils.py                 # Utility functions
+└── templates/               # HTML templates
+    └── score.html           # Score html page template
+    └── error.html           # Error html page template
+
 ```
