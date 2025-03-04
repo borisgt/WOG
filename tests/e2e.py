@@ -41,17 +41,17 @@ def main_function(url):
     :param url: URL of the web service
     :return: -1 if the test fails, 0 if it passes.
     """
-    if url is None:
-        url = "http://localhost:8777"
 
     if test_scores_service(url):
-        print("Test passed!")
         sys.exit(0)
     else:
-        print("Test failed!")
         sys.exit(-1)
 
 if __name__ == "__main__":
-    service_url = None
+    if len(sys.argv) > 1:
+        service_url = sys.argv[1]
+    else:
+        service_url = "http://localhost:8777"
+
     main_function(service_url)
 

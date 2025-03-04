@@ -1,6 +1,7 @@
 pipeline {
     agent any
     tools {
+        // Define docker version for jenkins plugin
         'org.jenkinsci.plugins.docker.commons.tools.DockerTool' '27.3.1'
     }
     environment {
@@ -10,6 +11,8 @@ pipeline {
         PATH = "/usr/local/bin:$PATH"
         DOCKER_CERT_PATH = credentials('dockerhub_id')
         CONTAINER_FLASK = "wog_flask_container"
+        APP_URL = "http://localhost:${FLASK_PORT}"
+        FLASK_SERVICE = "flask_wog"
     }
 
     stages {
@@ -30,7 +33,7 @@ pipeline {
         stage('Run') {
             steps {
                 script {
-                    sh 'docker compose up -d flask_wog'
+                    sh 'docker compose up -d ${FLASK_SERVICE}'
                 }
             }
         }
@@ -38,7 +41,8 @@ pipeline {
         stage('Test') {
             steps {
                 script {
-                    def testResult = sh(script: "docker exec ${CONTAINER_FLASK} sh -c 'sleep 10 && python3 /wog/tests/e2e.py'", returnStatus: true)
+                    def testResult = sh(script: "docker exec ${CONTAINER_FLASK} sh -c
+                    'sleep 10 && python3 /wog/tests/e2e.py ${APP_URL}'", returnStatus: true)
                     if (testResult == 0) {
                         echo "Tests succeeded!"
                     } else {
@@ -72,7 +76,7 @@ pipeline {
             script {
                 sh """
                 if [ \$(docker ps -aq -f name=${CONTAINER_FLASK}) ]; then
-                    docker rm -f ${CONTAINER_FLASK}
+                    docker rm -vf ${CONTAINER_FLASK}
                 fi
                 """
 
