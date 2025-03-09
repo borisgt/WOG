@@ -35,9 +35,6 @@ pipeline {
         }
 
         stage('Run') {
-            when {
-                expression { currentBuild.result != 'SUCCESS' }
-            }
             steps {
                 script {
                     sh 'docker compose up -d ${FLASK_SERVICE}'
@@ -46,9 +43,6 @@ pipeline {
         }
 
         stage('Test') {
-            when {
-                expression { currentBuild.result != 'SUCCESS' }
-            }
             steps {
                 script {
                     def testResult = sh(script: "docker exec ${CONTAINER_FLASK} sh -c 'sleep 10 && python3 /wog/tests/e2e.py ${APP_URL}'",
@@ -63,9 +57,6 @@ pipeline {
         }
 
         stage('Deploy image to Docker Hub') {
-            when {
-                expression { currentBuild.result != 'SUCCESS' }
-            }
             steps {
                 script {
                     sh """
@@ -76,9 +67,6 @@ pipeline {
         }
 
         stage('Finalize') {
-            when {
-                expression { currentBuild.result != 'SUCCESS' }
-            }
             steps {
                 script {
                     sh 'docker compose down'
