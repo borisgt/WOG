@@ -14,26 +14,7 @@ pipeline {
         FLASK_SERVICE = "flask_wog"
     }
 
-    triggers {
-        pollSCM('H/5 * * * *') // Polls the SCM every 5 minutes
-    }
-
     stages {
-        stage('Check for Changes') {
-            steps {
-                script {
-                    def changes = sh(script: 'git diff --name-only HEAD HEAD~1', returnStdout: true).trim()
-                    if (changes) {
-                        echo "Changes detected: ${changes}"
-                    } else {
-                        echo "No changes detected."
-                        currentBuild.result = 'SUCCESS'
-                        return
-                    }
-                }
-            }
-        }
-
         stage('Build') {
             when {
                 expression { currentBuild.result != 'SUCCESS' }
