@@ -14,7 +14,17 @@ pipeline {
         FLASK_SERVICE = "flask_wog"
     }
 
+    triggers {
+        pollSCM('H/5 * * * *') // Polls the SCM every 5 minutes
+    }
+
     stages {
+        stage('Checkout') {
+            steps {
+                checkout scm
+            }
+        }
+
         stage('Build') {
             steps {
                 script {
