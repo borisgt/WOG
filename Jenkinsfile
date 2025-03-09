@@ -16,14 +16,12 @@ pipeline {
 
     stages {
         stage('Build') {
-            when {
-                expression { currentBuild.result != 'SUCCESS' }
-            }
             steps {
                 script {
                     sh '''
                         echo $((RANDOM % 2001)) > Scores.txt
                     '''
+
                     sh 'chmod a+r Scores.txt'
                     sh 'docker compose build'
                 }
