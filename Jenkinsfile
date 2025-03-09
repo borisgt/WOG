@@ -1,7 +1,6 @@
 pipeline {
     agent any
     tools {
-        // Define docker version for jenkins plugin
         'org.jenkinsci.plugins.docker.commons.tools.DockerTool' '27.3.1'
     }
     environment {
@@ -15,14 +14,41 @@ pipeline {
         FLASK_SERVICE = "flask_wog"
     }
 
+    triggers {
+        pollSCM('H/5 * * * *') // Polls the SCM every 5 minutes
+    }
+
     stages {
+        stage('Checkout') {
+            steps {
+                checkout scm
+            }
+        }
+
+        stage('Check for Changes') {
+            steps {
+                script {
+                    def changes = sh(script: 'git diff --name-only HEAD HEAD~1', returnStdout: true).trim()
+                    if (changes) {
+                        echo "Changes detected: ${changes}"
+                    } else {
+                        echo "No changes detected."
+                        currentBuild.result = 'SUCCESS'
+                        return
+                    }
+                }
+            }
+        }
+
         stage('Build') {
+            when {
+                expression { currentBuild.result != 'SUCCESS' }
+            }
             steps {
                 script {
                     sh '''
                         echo $((RANDOM % 2001)) > Scores.txt
                     '''
-
                     sh 'chmod a+r Scores.txt'
                     sh 'docker compose build'
                 }
@@ -30,6 +56,9 @@ pipeline {
         }
 
         stage('Run') {
+            when {
+                expression { currentBuild.result != 'SUCCESS' }
+            }
             steps {
                 script {
                     sh 'docker compose up -d ${FLASK_SERVICE}'
@@ -38,6 +67,9 @@ pipeline {
         }
 
         stage('Test') {
+            when {
+                expression { currentBuild.result != 'SUCCESS' }
+            }
             steps {
                 script {
                     def testResult = sh(script: "docker exec ${CONTAINER_FLASK} sh -c 'sleep 10 && python3 /wog/tests/e2e.py ${APP_URL}'",
@@ -52,6 +84,9 @@ pipeline {
         }
 
         stage('Deploy image to Docker Hub') {
+            when {
+                expression { currentBuild.result != 'SUCCESS' }
+            }
             steps {
                 script {
                     sh """
@@ -62,6 +97,9 @@ pipeline {
         }
 
         stage('Finalize') {
+            when {
+                expression { currentBuild.result != 'SUCCESS' }
+            }
             steps {
                 script {
                     sh 'docker compose down'
@@ -78,10 +116,8 @@ pipeline {
                     docker rm -vf ${CONTAINER_FLASK}
                 fi
                 """
-
                 sh 'docker system prune -f'
                 sh 'docker rmi ${DOCKER_IMAGE}'
-
                 cleanWs()
             }
         }
